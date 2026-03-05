@@ -1,0 +1,31 @@
+const express = require('express');
+const cors = require('cors');
+const app = express();
+
+app.use(cors()); // Fixes "Connection Severed" issues
+app.use(express.json());
+
+// THE MASSIVE DATABASE (Add your 100+ anime here)
+const animeMultiverse = [
+    { id: 1, title: "Solo Leveling", video: "https://www.youtube.com", tags: ["Action", "Fantasy"] },
+    { id: 2, title: "Jujutsu Kaisen", video: "https://www.youtube.com", tags: ["Supernatural", "Action"] },
+    { id: 3, title: "Demon Slayer", video: "https://www.youtube.com", tags: ["Adventure", "Dark"] },
+    // ... You will keep adding more here
+];
+
+// THE SEARCH API
+app.get('/api/search', (req, res) => {
+    const query = req.query.q ? req.query.q.toLowerCase() : "";
+    const results = animeMultiverse.filter(anime => 
+        anime.title.toLowerCase().includes(query)
+    );
+    res.json(results);
+});
+
+// HOME ROUTE (To check if server is live)
+app.get('/', (req, res) => {
+    res.send("ENGINE STATUS: PRIME. NEURAL LINK ACTIVE.");
+});
+
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
